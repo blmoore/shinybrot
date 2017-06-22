@@ -7,7 +7,7 @@
 
 library(ggplot2)
 library(shiny)
-library(mandelbrot)
+library(mandelbrot) 
 
 cols <- c(
   colorRampPalette(c("#e7f0fa", "#c9e2f6", "#95cbee",
@@ -80,7 +80,7 @@ shinyServer(function(input, output) {
     }
     
     if (pal == "Heat") {
-      cols$cols <- mandelbrot_palette(heat.colors(50))
+      cols$cols <- mandelbrot_palette(rev(RColorBrewer::brewer.pal(11, "RdYlBu")))
     }
     
     if (pal == "Ice") {
