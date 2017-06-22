@@ -1,0 +1,30 @@
+div#mandelbrot {
+  margin: 0 auto;
+}
+
+div.outer {
+  position: fixed;
+  top: 41px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+
+#controls {
+  background-color: white;
+  padding: 0 20px 0px 20px;
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.7;
+  transition: opacity 500ms 1s;
+  font-size: smaller;
+}
+
+#controls:hover {
+  /* Fade in while hovering */
+  opacity: 1;
+  transition-delay: 0;
+}
