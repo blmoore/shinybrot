@@ -5,26 +5,43 @@ library(shiny)
 # devtools::install_github("blmoore/mandelbrot")
 library(mandelbrot) 
 
-vaccine_pal <- c(
-  colorRampPalette(c("#e7f0fa", "#c9e2f6", "#95cbee",
-    "#0099dc", "#4ab04a", "#ffd73e"))(10),
-  colorRampPalette(c("#eec73a", "#e29421", "#e29421", 
-    "#f05336","#ce472e"), bias=2)(90), 
-  "black")
-
-df <- mandelbrot0()
+# pre-generated palettes, select these by index
+palettes <- list(
+  Spectral = mandelbrot_palette(RColorBrewer::brewer.pal(11, "Spectral")),
+  Vaccine = c(
+    colorRampPalette(c("#e7f0fa", "#c9e2f6", "#95cbee",
+      "#0099dc", "#4ab04a", "#ffd73e"))(10),
+    colorRampPalette(c("#eec73a", "#e29421", "#e29421", 
+      "#f05336","#ce472e"), bias=2)(90), 
+    "black"),
+  Greyscale = mandelbrot_palette(grey.colors(50)),
+  Heat =  mandelbrot_palette(rev(RColorBrewer::brewer.pal(11, "RdYlBu"))),
+  Ice = mandelbrot_palette(RColorBrewer::brewer.pal(9, "Blues"), in_set = "white"),
+  Lava = c(
+    grey.colors(12, start = .3, end = 1),
+    colorRampPalette(RColorBrewer::brewer.pal(9, "YlOrRd"), bias=2)(90), 
+    "black")
+)
 
 shinyServer(function(input, output, session) {
   
   limits <- reactiveValues(xlim = c(-2, 2), ylim = c(-2, 2))
   #transform <- reactiveValues(method = "none")
-  cols <- reactiveValues(cols = vaccine_pal)
+  cols <- reactiveValues(cols = palettes$Vaccine)
   
   observe({
     query <- parseQueryString(session$clientData$url_search)
+    print(query)
     if ('x' %in% names(query) & 'y' %in% names(query)) {
       limits$xlim <- as.numeric(unlist(strsplit(query$x, ",")))
       limits$ylim <- as.numeric(unlist(strsplit(query$y, ",")))
+    }
+    
+    if ('pal' %in% names(query)) {
+      #cols$cols <- palettes[[as.numeric(query$pal)]]
+      updateRadioButtons(session, "palette",
+        selected = names(palettes)[as.numeric(query$pal)]
+      )
     }
   })
   
@@ -39,6 +56,10 @@ shinyServer(function(input, output, session) {
       "&y=", 
       paste(limits$ylim, collapse = ",")
     )
+    
+    if (input$palette != "Vaccine") {
+      uri <- paste0(uri, '&pal=', which(names(palettes) == input$palette))
+    }
     
     tags$a(href = uri,
       "Direct link to this view")
@@ -92,28 +113,7 @@ shinyServer(function(input, output, session) {
   # })
   
   observe({
-    pal <- input$palette
-    
-    if (pal == "Spectral") {
-      cols$cols <- mandelbrot_palette(RColorBrewer::brewer.pal(11, "Spectral"))
-    } 
-    
-    if (pal == "Vaccine") {
-      cols$cols <- vaccine_pal
-    }
-    
-    if (pal == "Greyscale") {
-      cols$cols <- mandelbrot_palette(grey.colors(50))
-    }
-    
-    if (pal == "Heat") {
-      cols$cols <- mandelbrot_palette(rev(RColorBrewer::brewer.pal(11, "RdYlBu")))
-    }
-    
-    if (pal == "Ice") {
-      cols$cols <- mandelbrot_palette(RColorBrewer::brewer.pal(9, "Blues"), in_set = "white")
-    }
-    
+    cols$cols <- palettes[[input$palette]]
   })
   
 })

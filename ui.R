@@ -37,7 +37,7 @@ shinyUI(
           
           radioButtons("palette",
             "Colours:",
-            choices = c("Vaccine", "Spectral", "Greyscale", "Heat", "Ice"),
+            choices = c("Vaccine", "Spectral", "Greyscale", "Heat", "Ice", "Lava"),
             width = "100%",
             inline = TRUE),
           
