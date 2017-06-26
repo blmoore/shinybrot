@@ -72,7 +72,8 @@ shinyServer(function(input, output, session) {
     ggplot(df, aes(x = x, y = y, fill = value)) +
       geom_raster(interpolate = TRUE) + theme_void() +
       scale_fill_gradientn(colours = cols$cols, guide = "none") +
-      coord_equal()
+      coord_equal() + scale_y_continuous(expand = c(0,0)) +
+      scale_x_continuous(expand = c(0,0))
     
   })
   
