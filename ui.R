@@ -29,16 +29,17 @@ shinyUI(
       
       column(width = 6,  
         wellPanel(
+          
+          tags$label(
+            class="control-label",
+            "Link:"),
+          uiOutput("qurl"),
+          
           radioButtons("palette",
             "Colours:",
             choices = c("Vaccine", "Spectral", "Greyscale", "Heat", "Ice"),
             width = "100%",
             inline = TRUE)
-          # radioButtons("trans",
-          #   "Transform:",
-          #   choices = list(None = "none", Log = "log", Inverse = "inv"),
-          #   width = "100%",
-          #   inline = TRUE)
         )
       ),
       
@@ -53,7 +54,7 @@ shinyUI(
             width = "100%")
         )
       )
-      
     )
+    
   )
 )

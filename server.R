@@ -12,11 +12,38 @@ vaccine_pal <- c(
     "#f05336","#ce472e"), bias=2)(90), 
   "black")
 
-shinyServer(function(input, output) {
+df <- mandelbrot0()
+
+shinyServer(function(input, output, session) {
   
-  limits <- reactiveValues(xlim = NULL, ylim = NULL)
+  limits <- reactiveValues(xlim = c(-2, 2), ylim = c(-2, 2))
   #transform <- reactiveValues(method = "none")
   cols <- reactiveValues(cols = vaccine_pal)
+  
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if ('x' %in% names(query) & 'y' %in% names(query)) {
+      limits$xlim <- as.numeric(unlist(strsplit(query$x, ",")))
+      limits$ylim <- as.numeric(unlist(strsplit(query$y, ",")))
+    }
+  })
+  
+  output$qurl <- renderUI({
+    
+    uri <- paste0(
+      session$clientData$url_protocol, "//",
+      session$clientData$url_hostname,
+      session$clientData$url_pathname,
+      "?x=",
+      paste(limits$xlim, collapse = ","),
+      "&y=", 
+      paste(limits$ylim, collapse = ",")
+    )
+    
+    tags$a(href = uri,
+      "Direct link to this view")
+
+  })
   
   output$mandelbrot <- renderPlot({
     
