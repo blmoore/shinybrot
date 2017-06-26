@@ -1,15 +1,11 @@
 
-# This is the server logic for a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
-
 library(ggplot2)
 library(shiny)
+
+# devtools::install_github("blmoore/mandelbrot")
 library(mandelbrot) 
 
-cols <- c(
+vaccine_pal <- c(
   colorRampPalette(c("#e7f0fa", "#c9e2f6", "#95cbee",
     "#0099dc", "#4ab04a", "#ffd73e"))(10),
   colorRampPalette(c("#eec73a", "#e29421", "#e29421", 
@@ -17,36 +13,40 @@ cols <- c(
   "black")
 
 shinyServer(function(input, output) {
-
-  limits <- reactiveValues(xlim = NULL, ylim = NULL)
   
-  cols <- reactiveValues(cols = cols)
+  limits <- reactiveValues(xlim = NULL, ylim = NULL)
+  #transform <- reactiveValues(method = "none")
+  cols <- reactiveValues(cols = vaccine_pal)
   
   output$mandelbrot <- renderPlot({
     
     if (!is.null(limits$xlim)) {
-      df <- as.data.frame(
-        mandelbrot(
-          iterations = input$iter,
-          resolution = input$res,
-          xlim = limits$xlim,
-          ylim = limits$ylim
-        )
+      df <- mandelbrot0(
+        iterations = input$iter,
+        resolution = input$res,
+        xlim = limits$xlim,
+        ylim = limits$ylim
       )
     } else {
-      df <- as.data.frame(
-        mandelbrot(
-          iterations = input$iter,
-          resolution = input$res
-        )
+      df <- mandelbrot0(
+        iterations = input$iter,
+        resolution = input$res
       )
     }
+    
+    # if (transform$method == "log") {
+    #   df$value <- log(df$value)
+    # } 
+    # 
+    # if (transform$method == "inv") {
+    #   df$value <- 1/df$value
+    # }
     
     ggplot(df, aes(x = x, y = y, fill = value)) +
       geom_raster(interpolate = TRUE) + theme_void() +
       scale_fill_gradientn(colours = cols$cols, guide = "none") +
       coord_equal()
-
+    
   })
   
   observe({
@@ -59,6 +59,10 @@ shinyServer(function(input, output) {
     
   })
   
+  # observe({
+  #   transform$method <- input$trans
+  # })
+  
   observe({
     pal <- input$palette
     
@@ -67,12 +71,7 @@ shinyServer(function(input, output) {
     } 
     
     if (pal == "Vaccine") {
-      cols$cols <- c(
-        colorRampPalette(c("#e7f0fa", "#c9e2f6", "#95cbee",
-          "#0099dc", "#4ab04a", "#ffd73e"))(10),
-        colorRampPalette(c("#eec73a", "#e29421", "#e29421", 
-          "#f05336","#ce472e"), bias=2)(90), 
-        "black")
+      cols$cols <- vaccine_pal
     }
     
     if (pal == "Greyscale") {
@@ -86,7 +85,7 @@ shinyServer(function(input, output) {
     if (pal == "Ice") {
       cols$cols <- mandelbrot_palette(RColorBrewer::brewer.pal(9, "Blues"), in_set = "white")
     }
-
+    
   })
-
+  
 })
