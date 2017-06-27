@@ -42,6 +42,17 @@ shinyServer(function(input, output, session) {
         selected = names(palettes)[as.numeric(query$pal)]
       )
     }
+    
+    if ('res' %in% names(query)) {
+      updateSliderInput(session, "res",
+        value = as.numeric(query$res))
+    }
+    
+    if ('iter' %in% names(query)) {
+      updateSliderInput(session, "iter",
+        value = as.numeric(query$iter))
+    }
+    
   })
   
   # generate uri with limits and other params
@@ -59,6 +70,14 @@ shinyServer(function(input, output, session) {
     
     if (input$palette != "Vaccine") {
       uri <- paste0(uri, '&pal=', which(names(palettes) == input$palette))
+    }
+    
+    if (input$res != 500) {
+      uri <- paste0(uri, '&res=', input$res)
+    }
+    
+    if (input$iter != 300) {
+      uri <- paste0(uri, '&iter=', input$iter)
     }
     
     tags$a(href = uri,
