@@ -80,6 +80,10 @@ shinyServer(function(input, output, session) {
       uri <- paste0(uri, '&iter=', input$iter)
     }
     
+    updateQueryString(sub(".*\\?", "?", uri), 
+      mode = "push", 
+      session = session) 
+    
     tags$a(href = uri,
       "Direct link to this view")
 
