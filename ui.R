@@ -4,7 +4,6 @@ library(shiny)
 shinyUI(
   
   fluidPage(
-    #titlePanel("R Mandelbrot set explorer"),
     
     tags$head(
       includeCSS("www/styles.css")
@@ -57,6 +56,8 @@ shinyUI(
           
           tags$hr(),
           
+          actionButton("reset", "Reset", class="pull-right"),
+          
           p(icon("github", class = NULL, lib = "font-awesome"),
             tags$a(href="https://github.com/blmoore/shinybrot",
               "blmoore/shinybrot"),
@@ -68,7 +69,7 @@ shinyUI(
           
         )
       )
-    )
+    ) # end fluidRow
     
   )
 )

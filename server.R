@@ -26,25 +26,25 @@ palettes <- list(
 shinyServer(function(input, output, session) {
   
   limits <- reactiveValues(xlim = c(-2, 2), ylim = c(-2, 2))
-  #transform <- reactiveValues(method = "none")
   cols <- reactiveValues(cols = palettes$Vaccine)
   
+  # parse and set url params 
   observe({
     query <- parseQueryString(session$clientData$url_search)
-    print(query)
+    
     if ('x' %in% names(query) & 'y' %in% names(query)) {
       limits$xlim <- as.numeric(unlist(strsplit(query$x, ",")))
       limits$ylim <- as.numeric(unlist(strsplit(query$y, ",")))
     }
     
     if ('pal' %in% names(query)) {
-      #cols$cols <- palettes[[as.numeric(query$pal)]]
       updateRadioButtons(session, "palette",
         selected = names(palettes)[as.numeric(query$pal)]
       )
     }
   })
   
+  # generate uri with limits and other params
   output$qurl <- renderUI({
     
     uri <- paste0(
@@ -66,6 +66,7 @@ shinyServer(function(input, output, session) {
 
   })
   
+  # main plot view
   output$mandelbrot <- renderPlot({
     
     if (!is.null(limits$xlim)) {
@@ -82,14 +83,6 @@ shinyServer(function(input, output, session) {
       )
     }
     
-    # if (transform$method == "log") {
-    #   df$value <- log(df$value)
-    # } 
-    # 
-    # if (transform$method == "inv") {
-    #   df$value <- 1/df$value
-    # }
-    
     ggplot(df, aes(x = x, y = y, fill = value)) +
       geom_raster(interpolate = TRUE) + theme_void() +
       scale_fill_gradientn(colours = cols$cols, guide = "none") +
@@ -98,6 +91,7 @@ shinyServer(function(input, output, session) {
     
   })
   
+  # interactive zoom
   observe({
     brush <- input$zoom_brush
     
@@ -108,10 +102,14 @@ shinyServer(function(input, output, session) {
     
   })
   
-  # observe({
-  #   transform$method <- input$trans
-  # })
+  # reset view by action button
+  observeEvent(input$reset, {
+    limits$xlim <- c(-2, 2)
+    limits$ylim <- c(-2, 2)
+    cols$cols <- palettes$Vaccine
+  })
   
+  # palettes radio select
   observe({
     cols$cols <- palettes[[input$palette]]
   })
