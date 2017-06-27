@@ -4,7 +4,6 @@ library(shiny)
 shinyUI(
   
   fluidPage(
-    #titlePanel("R Mandelbrot set explorer"),
     
     tags$head(
       includeCSS("www/styles.css")
@@ -39,6 +38,7 @@ shinyUI(
             "Colours:",
             choices = c("Vaccine", "Spectral", "Greyscale", "Heat", "Ice", "Lava"),
             width = "100%",
+            selected = character(0),
             inline = TRUE),
           
           sliderInput("res",
