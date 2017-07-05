@@ -24,7 +24,12 @@ shinyUI(
           p("A Mandelbrot set explorer written in R + shiny. ",
             "Under the hood it's using the ", 
             tags$a(href="https://github.com/blmoore/mandelbrot", "mandelbrot"),
-            " R package and ggplot2."),
+            " R package and ggplot2.")
+          ,p(
+            "Set membership is calculated super-fast thanks to a C function originally from the ",
+              tags$a(href="https://github.com/mariodosreis/fractal", "fractal"),
+            "package."
+            ),
           
           tags$hr(),
           
