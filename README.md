@@ -32,6 +32,12 @@ docker run -dp 3838:3838 blmoore/shinybrot
 
 Then view at [localhost:3838](http://localhost:3838).
 
+## Screenshots
+
+### v0.1
+
+![](shinybrot_screenshot.png)
+
 ## Bugs
 
 * Zoom in far enough and you'll find grid lines!
