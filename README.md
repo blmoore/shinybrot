@@ -27,10 +27,10 @@ shiny::runGitHub("blmoore/shinybrot")
 Alternatively, run using the [docker automated build](https://hub.docker.com/r/blmoore/shinybrot/) from the Dockerfile in this repository:
 
 ```sh
-docker run -dp 3838:3838 blmoore/shinybrot
+docker run -dp 80:3838 blmoore/shinybrot
 ```
 
-Then view at [localhost:3838](http://localhost:3838).
+Then view at [localhost](http://localhost).
 
 ## Screenshots
 
