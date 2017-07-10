@@ -1,8 +1,9 @@
 # shinybrot
-Simple shiny app for exploring the Mandelbrot set. 
+[![docker automated](https://img.shields.io/docker/automated/blmoore/shinybrot.svg)](https://hub.docker.com/r/blmoore/shinybrot/)
 
-Views are calculated using the R package [`mandelbrot`](https://github.com/blmoore/mandelbrot) and 
-drawn with `ggplot2`.
+Simple shiny app for exploring the Mandelbrot set. See [this blog post](https://benjaminlmoore.wordpress.com/2017/06/27/the-mandelbrot-set-in-r/) for some discussion and pretty pictures.
+
+Views are calculated using the R package [`mandelbrot`](https://github.com/blmoore/mandelbrot) and drawn with `ggplot2`.
 
 ## Explore
 
@@ -15,9 +16,21 @@ Use the `direct link` to zoom to specific views + settings, e.g.:
 
 ## Run locally
 
+Run within an R session with:
+
 ```r
 shiny::runGitHub("blmoore/shinybrot")
 ```
+
+### Docker
+
+Alternatively, run using the [docker automated build](https://hub.docker.com/r/blmoore/shinybrot/) from the Dockerfile in this repository:
+
+```sh
+docker run -dp 3838:3838 blmoore/shinybrot
+```
+
+Then view at [localhost:3838](http://localhost:3838).
 
 ## Bugs
 
